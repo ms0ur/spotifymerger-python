@@ -99,6 +99,25 @@ class SettingsDialog(QDialog):
         description.setOpenExternalLinks(True)
         layout.addWidget(description)
         
+        # Добавляем детальные инструкции
+        instructions = QLabel(
+            "При создании приложения в Spotify Dashboard:\n\n"
+            "1. Добавьте следующий Redirect URI:\n"
+            "   http://localhost:8888/callback\n\n"
+            "2. Включите следующие API:\n"
+            "   • Web API\n\n"
+            "3. Скопируйте Client ID и Client Secret из настроек приложения"
+        )
+        instructions.setWordWrap(True)
+        instructions.setStyleSheet("""
+            color: #B3B3B3;
+            background-color: #282828;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+        """)
+        layout.addWidget(instructions)
+        
         # Основной контейнер
         main_frame = QFrame()
         main_frame.setStyleSheet("""

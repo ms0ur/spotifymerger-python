@@ -36,12 +36,172 @@ class OAuthHandler(http.server.SimpleHTTPRequestHandler):
             self.send_response(200)
             self.send_header('Content-type', 'text/html; charset=utf-8')
             self.end_headers()
-            self.wfile.write("Авторизация успешна! Можете закрыть это окно.".encode('utf-8'))
+            
+            html = """
+            <!DOCTYPE html>
+            <html lang="ru">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Spotify Merger - Авторизация</title>
+                <style>
+                    body {
+                        font-family: 'Segoe UI', Arial, sans-serif;
+                        background-color: #121212;
+                        color: #FFFFFF;
+                        margin: 0;
+                        padding: 0;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        min-height: 100vh;
+                        text-align: center;
+                    }
+                    .container {
+                        background-color: #282828;
+                        padding: 40px;
+                        border-radius: 10px;
+                        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                        max-width: 400px;
+                        width: 90%;
+                    }
+                    h1 {
+                        color: #1DB954;
+                        font-size: 24px;
+                        margin-bottom: 20px;
+                    }
+                    .success-icon {
+                        font-size: 48px;
+                        margin-bottom: 20px;
+                        color: #1DB954;
+                    }
+                    p {
+                        color: #B3B3B3;
+                        line-height: 1.6;
+                        margin-bottom: 20px;
+                    }
+                    .close-button {
+                        background-color: #1DB954;
+                        color: white;
+                        border: none;
+                        padding: 12px 24px;
+                        border-radius: 20px;
+                        font-size: 14px;
+                        font-weight: bold;
+                        cursor: pointer;
+                        transition: background-color 0.3s;
+                    }
+                    .close-button:hover {
+                        background-color: #1ed760;
+                    }
+                    @keyframes fadeIn {
+                        from { opacity: 0; transform: translateY(-20px); }
+                        to { opacity: 1; transform: translateY(0); }
+                    }
+                    .fade-in {
+                        animation: fadeIn 0.5s ease-out;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="container fade-in">
+                    <div class="success-icon">✓</div>
+                    <h1>Авторизация успешна!</h1>
+                    <p>Вы успешно авторизовались в Spotify Merger.<br>Теперь вы можете вернуться в приложение.</p>
+                    <button class="close-button" onclick="window.close()">Закрыть окно</button>
+                </div>
+                <script>
+                    setTimeout(() => window.close(), 3000);
+                </script>
+            </body>
+            </html>
+            """
+            self.wfile.write(html.encode('utf-8'))
         else:
             self.send_response(400)
             self.send_header('Content-type', 'text/html; charset=utf-8')
             self.end_headers()
-            self.wfile.write("Ошибка авторизации!".encode('utf-8'))
+            
+            error_html = """
+            <!DOCTYPE html>
+            <html lang="ru">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Spotify Merger - Ошибка</title>
+                <style>
+                    body {
+                        font-family: 'Segoe UI', Arial, sans-serif;
+                        background-color: #121212;
+                        color: #FFFFFF;
+                        margin: 0;
+                        padding: 0;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        min-height: 100vh;
+                        text-align: center;
+                    }
+                    .container {
+                        background-color: #282828;
+                        padding: 40px;
+                        border-radius: 10px;
+                        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                        max-width: 400px;
+                        width: 90%;
+                    }
+                    h1 {
+                        color: #ff6b6b;
+                        font-size: 24px;
+                        margin-bottom: 20px;
+                    }
+                    .error-icon {
+                        font-size: 48px;
+                        margin-bottom: 20px;
+                        color: #ff6b6b;
+                    }
+                    p {
+                        color: #B3B3B3;
+                        line-height: 1.6;
+                        margin-bottom: 20px;
+                    }
+                    .close-button {
+                        background-color: #ff6b6b;
+                        color: white;
+                        border: none;
+                        padding: 12px 24px;
+                        border-radius: 20px;
+                        font-size: 14px;
+                        font-weight: bold;
+                        cursor: pointer;
+                        transition: background-color 0.3s;
+                    }
+                    .close-button:hover {
+                        background-color: #ff8787;
+                    }
+                    @keyframes fadeIn {
+                        from { opacity: 0; transform: translateY(-20px); }
+                        to { opacity: 1; transform: translateY(0); }
+                    }
+                    .fade-in {
+                        animation: fadeIn 0.5s ease-out;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="container fade-in">
+                    <div class="error-icon">⚠</div>
+                    <h1>Ошибка авторизации</h1>
+                    <p>Произошла ошибка при авторизации в Spotify.<br>Пожалуйста, попробуйте снова.</p>
+                    <button class="close-button" onclick="window.close()">Закрыть окно</button>
+                </div>
+                <script>
+                    setTimeout(() => window.close(), 3000);
+                </script>
+            </body>
+            </html>
+            """
+            self.wfile.write(error_html.encode('utf-8'))
 
 class SpotifyClient:
     def __init__(self, client_id=None, client_secret=None):
@@ -431,6 +591,47 @@ class SpotifyClient:
             )
             if response.status_code not in [200, 201]:
                 raise Exception(f"Ошибка добавления треков в любимые: {response.text}")
+
+    def restore_from_backup(self, backup_file: str) -> Tuple[int, str]:
+        """Восстанавливает треки из бэкапа в любимые треки
+        
+        Args:
+            backup_file: Путь к файлу бэкапа
+            
+        Returns:
+            Tuple[int, str]: Количество восстановленных треков и сообщение о результате
+        """
+        try:
+            # Читаем файл бэкапа
+            with open(backup_file, 'r', encoding='utf-8') as f:
+                backup_data = json.load(f)
+                
+            if not isinstance(backup_data, dict) or 'tracks' not in backup_data:
+                return 0, "Неверный формат файла бэкапа"
+                
+            tracks = backup_data['tracks']
+            if not tracks:
+                return 0, "В бэкапе нет треков"
+                
+            # Извлекаем ID треков из URI
+            track_ids = []
+            for track in tracks:
+                if 'spotify_uri' in track:
+                    track_id = track['spotify_uri'].split(':')[-1]
+                    track_ids.append(track_id)
+                    
+            if not track_ids:
+                return 0, "Не найдено действительных ID треков"
+                
+            # Добавляем треки в любимые
+            self.add_to_liked_tracks(track_ids)
+            
+            return len(track_ids), "Треки успешно восстановлены"
+            
+        except json.JSONDecodeError:
+            return 0, "Ошибка чтения файла бэкапа: неверный формат JSON"
+        except Exception as e:
+            return 0, f"Ошибка при восстановлении: {str(e)}"
 
     def check_liked_tracks(self, track_ids: List[str]) -> List[bool]:
         """Проверяет, находятся ли треки в любимых"""

@@ -41,6 +41,5 @@ exe = EXE(
     disable_windowed_traceback=False,
     target_arch=None,
     codesign_identity=None,
-    entitlements_file=None,
-    icon='assets/icon.ico'
+    entitlements_file=None
 ) 
