@@ -15,9 +15,13 @@ Created with Cursor IDE
 
 ## Установка
 
+1. Скачайте последнюю версию из релизов.
+
+ИЛИ
+
 1. Склонируйте репозиторий:
 ```bash
-git clone https://github.com/yourusername/spotifymerger-python.git
+git clone https://github.com/ms0ur/spotifymerger-python.git
 cd spotifymerger-python
 ```
 
